@@ -187,10 +187,42 @@ const getallcartitembycartid = async (req, res) => {
 
 
 
+const getcartitembyuserid = async (req, res) => {
+
+  const userid = req.user._id;
+
+  const validuser = await user.findById(userid);
+  if (validuser) {
+    const usercart = await cart.findOne({ userid: userid });
+    if (usercart) {
+      const cartid = usercart._id;
+      const allcartitem = await cartitems.find({ cartid: cartid }).populate('productvarientid').populate({
+        path: 'productvarientid',
+        populate: {
+          path: 'productid'
+        }
+      });
+      if (allcartitem) {
+        res.status(200).send({ success: true, data: allcartitem });
+      }
+      else {
+        res.status(200).send({ success: true, msg: 'cart is empty' });
+      }
+    }
+    else {
+      res.status(200).send({ success: true, msg: 'cart not created, add any product in cart for creating cart' });
+    }
+  }
+  else {
+    res.status(200).send({ success: true, msg: 'invalid user id' });
+  }
+}
+
 module.exports = {
   addcart,
   addcartitems,
   getallcartitembycartid,
   getallcartitembyuserid,
-  getcartitembycartitemid
+  getcartitembycartitemid,
+  getcartitembyuserid,
 }

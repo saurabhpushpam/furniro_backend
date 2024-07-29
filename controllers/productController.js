@@ -270,7 +270,7 @@ const getallproduct = async (req, res) => {
 
 const getallproductvarient = async (req, res) => {
   try {
-    const productvarientdata = await productvarient.find();
+    const productvarientdata = await productvarient.find().populate('productid');
     res.status(200).send({ success: true, data: productvarientdata });
 
   } catch (error) {
