@@ -218,6 +218,23 @@ const getcartitembyuserid = async (req, res) => {
   }
 }
 
+
+
+
+const deletecartitem = async (req, res) => {
+  const cartitemid = req.params.cartitemid;
+  const validcartitem = await cartitems.findById(cartitemid);
+
+  if (validcartitem) {
+    const deldata = await cartitems.deleteOne({ id: cartitemid });
+    res.status(200).send({ success: true, msg: 'cart item removed' });
+  }
+  else {
+    res.status(200).send({ success: true, msg: 'invalid cartitem id' });
+  }
+
+}
+
 module.exports = {
   addcart,
   addcartitems,
@@ -225,4 +242,5 @@ module.exports = {
   getallcartitembyuserid,
   getcartitembycartitemid,
   getcartitembyuserid,
+  deletecartitem
 }

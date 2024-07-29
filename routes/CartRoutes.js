@@ -16,5 +16,6 @@ cart_routes.get('/getcartbycartid/:cartid', cartcontroller.getallcartitembycarti
 cart_routes.get('/getcartbyuserid/:userid', cartcontroller.getallcartitembyuserid);
 cart_routes.get('/getdatabycartitemid/:cartitemid', cartcontroller.getcartitembycartitemid);
 cart_routes.get('/getallcartitem', auth, cartcontroller.getcartitembyuserid);
+cart_routes.post('/deletecartitem/:cartitemid', cartcontroller.deletecartitem);
 
 module.exports = cart_routes;
