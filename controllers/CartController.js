@@ -34,10 +34,30 @@ const addcart = async (req, res) => {
 
 const addcartitems = async (req, res) => {
   try {
-    const cartitemdata = new cartitems({ cartid, productid, quantity } = req.body);
 
-    const usercartitem = await cartitemdata.save();
-    res.status(200).send({ success: true, data: usercartitem });
+    const { cartid, productvarientid, quantity } = req.body;
+
+    const avlproductvar = await cartitems.findOne({ productvarientid: productvarientid });
+    if (avlproductvar) {
+      const avlqty = parseInt(avlproductvar.quantity, 10);
+      const newqty = parseInt(quantity, 10);
+      const newquantity = avlqty + newqty;
+      const cartitemsdata = await cartitems.updateOne(
+        { productvarientid: productvarientid },
+        { $set: { quantity: newquantity } }
+      );
+
+      res.status(200).send({ success: true, data: cartitemsdata });
+
+
+    }
+
+    else {
+      const cartitemdata = new cartitems({ cartid, productvarientid, quantity });
+      const usercartitem = await cartitemdata.save();
+      res.status(200).send({ success: true, data: usercartitem });
+    }
+
 
   } catch (error) {
     res.status(400).send({ success: false, msg: error.message });
@@ -226,7 +246,8 @@ const deletecartitem = async (req, res) => {
   const validcartitem = await cartitems.findById(cartitemid);
 
   if (validcartitem) {
-    const deldata = await cartitems.deleteOne({ id: cartitemid });
+    const deldata = await cartitems.deleteOne({ _id: cartitemid });
+    // console.log(deldata);
     res.status(200).send({ success: true, msg: 'cart item removed' });
   }
   else {
