@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
 
     usertype: {
         type: String,
-
+        default: 'user'
     },
 
 

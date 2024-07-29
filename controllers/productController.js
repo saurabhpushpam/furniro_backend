@@ -104,7 +104,7 @@ const getproductvarientbyproductid = async (req, res) => {
     const productid = req.params.productid;
     const isvalidproductid = await product.findById(productid);
     if (isvalidproductid) {
-      const productvarientdata = await productvarient.findOne({ productid: productid });
+      const productvarientdata = await productvarient.findOne({ productid: productid }).populate('productid');
       if (productvarientdata) {
         res.status(200).send({ success: true, data: productvarientdata });
       }
@@ -121,13 +121,15 @@ const getproductvarientbyproductid = async (req, res) => {
 }
 
 
+
+
 const getproductvarientbyproductvarientid = async (req, res) => {
   try {
     const productvarientid = req.params.productvarientid;
     const validproductvarient = await productvarient.findById(productvarientid);
     if (validproductvarient) {
       const productid = await validproductvarient.productid;
-      const productvarientdata = await validproductvarient;
+      const productvarientdata = await validproductvarient.populate('productid');
 
       res.status(200).send({ success: true, data: productvarientdata });
 
@@ -140,6 +142,8 @@ const getproductvarientbyproductvarientid = async (req, res) => {
   }
 
 }
+
+
 
 
 

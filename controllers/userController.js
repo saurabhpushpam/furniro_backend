@@ -38,7 +38,7 @@ const register_user = async (req, res) => {
             email: req.body.email,
             phone: req.body.phone,
             password: spassword,
-            usertype: 'user',
+            // usertype: 'user',
             profileimage: imagePath
             // profileimage: req.file.filename
 

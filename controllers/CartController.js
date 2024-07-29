@@ -46,29 +46,29 @@ const addcartitems = async (req, res) => {
 
 
 
-const getallcartitembycartid = async (req, res) => {
-  try {
-    const cartid = req.params.cartid;
-    const getcart = await cart.findOne({ _id: cartid });
+// const getallcartitembycartid = async (req, res) => {
+//   try {
+//     const cartid = req.params.cartid;
+//     const getcart = await cart.findOne({ _id: cartid });
 
-    if (getcart) {
-      const getcartitem = await cartitems.find({ cartid: cartid });
-      if (getcartitem) {
-        res.status(200).send({ success: true, data: getcartitem });
-      }
-      else {
-        res.status(200).send({ success: true, data: 'cart is empty' })
-      }
+//     if (getcart) {
+//       const getcartitem = await cartitems.find({ cartid: cartid });
+//       if (getcartitem) {
+//         res.status(200).send({ success: true, data: getcartitem });
+//       }
+//       else {
+//         res.status(200).send({ success: true, data: 'cart is empty' })
+//       }
 
-    }
-    else {
-      res.status(200).send({ success: true, data: 'invalid cartid' })
-    }
+//     }
+//     else {
+//       res.status(200).send({ success: true, data: 'invalid cartid' })
+//     }
 
-  } catch (error) {
-    res.status(200).send({ success: false, msg: error.message })
-  }
-}
+//   } catch (error) {
+//     res.status(200).send({ success: false, msg: error.message })
+//   }
+// }
 
 
 
@@ -123,6 +123,69 @@ const getcartitembycartitemid = async (req, res) => {
   }
 
 }
+
+
+
+
+// getallcartitembycartid by using populate()
+
+// The .populate('cartid') method tells Mongoose to replace the cartid field in the resulting documents with the actual documents from the Cart collection that have the corresponding _id. This provides more detailed information about the cart rather than just its ID.
+// And 'cartid' is schema availble in cartModel
+
+const getallcartitembycartid = async (req, res) => {
+  try {
+    const { cartid } = req.params;
+    const cartdata = await cart.findById(cartid);
+    if (cartdata) {
+
+      // const cartitemsdata = await cartitems.find({ cartid }).populate('cartid').populate('productvarientid');
+
+      const cartitemsdata = await cartitems.find({ cartid }).populate('cartid')
+        .populate({
+          path: 'productvarientid',
+          populate: {
+            path: 'productid'
+          }
+        });
+
+      res.status(200).json({ success: true, data: { cartdata, cartitemsdata } });
+      // res.status(200).json({ success: true, data: { cartitemsdata } });
+
+    } else {
+      res.status(404).json({ success: false, msg: 'Cart not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+
+
+
+//getallcartbyuserid by using populate()
+
+// const getallcartbyuserid = async (req, res) => {
+//   try {
+//     const { userid } = req.params;
+//     const userdata = await user.findById(userid);
+//     if (userdata) {
+//       // const cartdata = await cart.findOne({ userid }).populate('userid');
+//       const cartdata = await cart.findOne({ userid });
+//       if (cartdata) {
+//         const cartdataitems = await cartitems.find({ cartid: cart._id }).populate('cartid');
+//         res.status(200).json({ success: true, data: { cartdata, cartdataitems } });
+//       } else {
+//         res.status(404).json({ success: false, msg: 'Cart not found' });
+//       }
+//     } else {
+//       res.status(404).json({ success: false, msg: 'User not found' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ success: false, msg: error.message });
+//   }
+// };
+
+
 
 module.exports = {
   addcart,

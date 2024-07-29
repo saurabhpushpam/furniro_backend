@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 addressRoutes.use(bodyParser.json());
 addressRoutes.use(bodyParser.urlencoded({ extended: true }));
 
-addressRoutes.post('/addaddress', addressController.addaddress);
+addressRoutes.post('/addaddress', auth, addressController.addaddress);
 addressRoutes.get('/getaddress/:addressid', addressController.getaddress);
 addressRoutes.get('/getalladdress', addressController.getalladdress);
 

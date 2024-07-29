@@ -3,8 +3,8 @@ const user = require('../models/userModel');
 
 const addcontact = async (req, res) => {
   try {
-    // const userid = req.body._id;
-    const { userid, name, email, subject } = req.body;
+    const userid = req.user._id;
+    const { name, email, subject } = req.body;
     const validuser = await user.findOne({ _id: userid });
 
     if (validuser) {

@@ -11,7 +11,7 @@ const orderController = require('../controllers/OrderController');
 order_routes.post('/addorder', orderController.addorder);
 order_routes.post('/addorderitems', orderController.addorderitem);
 order_routes.get('/getallorder', orderController.getallorder);
-// order_routes.get('/getorderbyuserid/:userid', orderController.getorderbyuserid);
-// order_routes.get('/getorderbyorderid/:orderid', orderController.getorderbyorderid);
+order_routes.get('/getorderbyuserid/:userid', orderController.getorderbyuserid);
+order_routes.get('/getorderbyorderid/:orderid', orderController.getorderbyorderid);
 
 module.exports = order_routes;
