@@ -34,30 +34,51 @@ const addcart = async (req, res) => {
 
 const addcartitems = async (req, res) => {
   try {
+    const userid = req.user._id;
+    const avlcart = cart.findOne({ userid: userid });
+    if (avlcart) {
+      const cartid = avlcart._id;
+      const { productvarientid, quantity } = req.body;
 
-    const { cartid, productvarientid, quantity } = req.body;
+      const avlproductvar = await cartitems.findOne({ productvarientid: productvarientid, orderstatus: "false" });
+      if (avlproductvar) {
+        const avlqty = parseInt(avlproductvar.quantity, 10);
+        const newqty = parseInt(quantity, 10);
+        const newquantity = avlqty + newqty;
+        const cartitemsdata = await cartitems.updateOne(
+          { productvarientid: productvarientid },
+          { $set: { quantity: newquantity } }
+        );
 
-    const avlproductvar = await cartitems.findOne({ productvarientid: productvarientid });
-    if (avlproductvar) {
-      const avlqty = parseInt(avlproductvar.quantity, 10);
-      const newqty = parseInt(quantity, 10);
-      const newquantity = avlqty + newqty;
-      const cartitemsdata = await cartitems.updateOne(
-        { productvarientid: productvarientid },
-        { $set: { quantity: newquantity } }
-      );
-
-      res.status(200).send({ success: true, data: cartitemsdata });
+        res.status(200).send({ success: true, data: cartitemsdata });
 
 
+      }
+
+      else {
+        const cartitemdata = new cartitems({ cartid, productvarientid, quantity });
+        const usercartitem = await cartitemdata.save();
+        res.status(200).send({ success: true, data: usercartitem });
+      }
     }
 
     else {
-      const cartitemdata = new cartitems({ cartid, productvarientid, quantity });
-      const usercartitem = await cartitemdata.save();
-      res.status(200).send({ success: true, data: usercartitem });
-    }
+      const usercart = new cart({
+        userid
+      });
 
+      const cartdata = await usercart.save();
+
+      const usercartitem = new cartitems({
+        cartid: cartdata._id,
+        productvarientid: req.body.productvarientid,
+        quantity: req.body.quantity
+      });
+
+      const newusercartitem = await usercartitem.save();
+
+      res.status(200).send({ success: true, data: newusercartitem });
+    }
 
   } catch (error) {
     res.status(400).send({ success: false, msg: error.message });
@@ -256,6 +277,52 @@ const deletecartitem = async (req, res) => {
 
 }
 
+
+
+
+const getactivecartitems = async (req, res) => {
+  try {
+    const cartitemdata = await cartitems.find({ orderstatus: false }).populate('productvarientid').populate({
+      path: 'productvarientid',
+      populate: {
+        path: 'productid'
+      }
+    });;
+
+    res.status(200).send({ success: true, data: cartitemdata })
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+
+  }
+}
+
+
+
+
+
+const cartstatus = async (req, res) => {
+  try {
+    // const cartitemid = req.body.cartitemid;
+
+    const result = await cartitems.updateMany(
+      { orderstatus: false }, { orderstatus: true }
+    );
+
+    if (result) {
+
+      res.status(200).send({ success: true, msg: 'updated successfully' });
+    }
+    else {
+      res.status(200).send({ success: true, msg: 'invalid cartitem id' });
+    }
+
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+
+  }
+
+}
+
 module.exports = {
   addcart,
   addcartitems,
@@ -263,5 +330,8 @@ module.exports = {
   getallcartitembyuserid,
   getcartitembycartitemid,
   getcartitembyuserid,
-  deletecartitem
+  deletecartitem,
+
+  cartstatus,
+  getactivecartitems
 }

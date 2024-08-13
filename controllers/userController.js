@@ -99,12 +99,13 @@ const create_token = async (id) => {
 const user_login = async (req, res) => {
     try {
 
-        const email = req.body.email;
-        const phone = req.body.phone;
+        // const email = req.body.email;
+        // const phone = req.body.phone;
+        const userid = req.body.userid
         const password = req.body.password;
 
-        if (email) {
-            const userData = await user.findOne({ email: email });
+        if (userid) {
+            const userData = await user.findOne({ email: userid });
 
 
             if (userData) {
@@ -126,7 +127,7 @@ const user_login = async (req, res) => {
                         email: userData.email,
                         password: userData.password,
                         phone: userData.phone,
-                        type: userData.type,
+                        usertype: userData.usertype,
                         token: tokenData
 
                     }
@@ -153,7 +154,7 @@ const user_login = async (req, res) => {
 
 
         else {
-            const userData = await user.findOne({ phone: phone });
+            const userData = await user.findOne({ phone: userid });
 
             if (userData) {
 
@@ -233,10 +234,48 @@ const getalluserdata = async (req, res) => {
 }
 
 
+const getuserbyid = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const validuser = await user.findById(id);
+        if (validuser) {
+            // console.log(validuser);
+            res.status(200).send({ success: true, data: validuser });
+        }
+        else {
+            res.status(200).send({ success: true, msg: 'invalid user id' });
+        }
+    } catch (error) {
+        res.status(400).send({ success: false, data: error.message });
+    }
+}
+
+
+
+
+const getuserbytoken = async (req, res) => {
+    try {
+        const id = req.user._id;
+        // console.log(id);
+        const validuser = await user.findById(id);
+        if (validuser) {
+            // console.log(validuser);
+            res.status(200).send({ success: true, data: validuser });
+        }
+        else {
+            res.status(200).send({ success: true, msg: 'invalid user id' });
+        }
+    } catch (error) {
+        res.status(400).send({ success: false, data: error.message });
+    }
+}
+
 module.exports = {
     register_user,
     user_login,
     getimage,
     getalluserdata,
+    getuserbyid,
+    getuserbytoken
 
 }

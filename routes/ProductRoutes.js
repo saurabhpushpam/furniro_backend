@@ -60,4 +60,12 @@ product_route.get('/getimage/:p_varientid/:image', productController.get_image_b
 product_route.get('/getproductimage/:imagename', productController.getproductimagebyimagename);
 product_route.get('/getproductvarientimage/:image', productController.getproductvarientimagebyimagename);
 
+product_route.get('/getimagepath/:imagename', productController.getproductvarientimagepathbyimagename);
+
+
+product_route.delete('/deleteoneproduct/:productid', productController.deleteproductbyid);
+
+product_route.delete('/deleteoneproductvarient/:productvarientid', productController.deleteproductvarientbyid);
+
+
 module.exports = product_route;

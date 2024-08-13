@@ -43,8 +43,33 @@ const getallcategory = async (req, res) => {
     }
 }
 
+
+
+const detletecategorybyid = async (req, res) => {
+    try {
+        const categoryid = req.params.categoryid;
+        const validcategory = await category.findById(categoryid);
+        if (validcategory) {
+            const deleteddata = await category.deleteOne({ _id: categoryid });
+
+            res.status(200).send({ success: true, msg: "category deleted successfully" });
+
+        }
+        else {
+            res.status(200).send({ success: true, msg: "category id not found" });
+
+        }
+    } catch (error) {
+        res.status(400).send({ success: false, msg: error.message });
+
+    }
+
+}
+
+
 module.exports = {
     addcategory,
     getcategorybycategoryid,
-    getallcategory
+    getallcategory,
+    detletecategorybyid
 }

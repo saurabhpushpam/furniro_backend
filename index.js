@@ -61,6 +61,12 @@ const ordreroutes = require("./routes/OrderRoutes");
 app.use('/api', ordreroutes);
 
 
+// neworder routes
+
+const newordreroutes = require("./routes/NeworderRoutes");
+app.use('/api', newordreroutes);
+
+
 
 // completeuserdetail routes
 

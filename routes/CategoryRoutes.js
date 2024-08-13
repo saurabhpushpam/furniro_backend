@@ -12,5 +12,6 @@ category_route.use(bodyParser.urlencoded({ extended: true }));
 category_route.post('/addcategory', categorycontroller.addcategory);
 category_route.get('/getcategorydatabyid/:categoryid', categorycontroller.getcategorybycategoryid);
 category_route.get('/getallcategory', categorycontroller.getallcategory);
+category_route.post('/deleteonecategory/:categoryid', categorycontroller.detletecategorybyid);
 
 module.exports = category_route;

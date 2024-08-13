@@ -10,7 +10,6 @@ user_routes.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-
 const multer = require('multer');
 const path = require('path');
 
@@ -40,6 +39,8 @@ const upload = multer({ storage: storage });
 user_routes.post('/register', upload.single('profileimage'), user_controller.register_user);
 user_routes.get('/profileimg/:id', user_controller.getimage);
 user_routes.get('/getalluserdata', user_controller.getalluserdata);
+user_routes.get('/getuserdatabyid/:id', user_controller.getuserbyid);
+user_routes.get('/getuserdatabytoken', auth, user_controller.getuserbytoken);
 
 user_routes.post('/login', user_controller.user_login);
 

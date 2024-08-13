@@ -13,8 +13,15 @@ const cartitemsSchema = mongoose.Schema({
 
   quantity: {
     type: Number,
+    default: 1
 
   },
+
+  orderstatus: {
+    // type: Boolean,
+    type: String,
+    default: 'false'
+  }
 
 },
   {

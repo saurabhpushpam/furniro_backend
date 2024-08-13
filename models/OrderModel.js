@@ -1,3 +1,4 @@
+const { Timestamp } = require('mongodb');
 var mongoose = require('mongoose');
 const orderSchema = mongoose.Schema({
   userid: {
@@ -18,6 +19,7 @@ const orderSchema = mongoose.Schema({
 
   orderdate: {
     type: Date,
+    default: Date.now
   },
 
   oredrstatus: {

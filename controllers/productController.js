@@ -258,7 +258,7 @@ const get_image_by_productvarientid_and_imagename = async (req, res) => {
 
 const getallproduct = async (req, res) => {
   try {
-    const productdata = await product.find();
+    const productdata = await product.find().populate('categoryid');
     res.status(200).send({ success: true, data: productdata });
 
   } catch (error) {
@@ -279,6 +279,75 @@ const getallproductvarient = async (req, res) => {
 }
 
 
+const getproductvarientimagepathbyimagename = async (req, res) => {
+  try {
+
+    const imagename = req.params.imagename;
+    const validimage = await productvarient.find({ image: imagename });
+    if (validimage) {
+      const images = path.join(__dirname, '..', 'public/productImages', imagename);
+      // console.log(images);
+      res.status(200).send({ success: true, data: images });
+    }
+    else {
+      res.status(200).send({ success: true, msg: 'invalid imagename' });
+    }
+
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+  }
+}
+
+
+
+
+
+const deleteproductbyid = async (req, res) => {
+  try {
+    const productid = req.params.productid;
+    const validproduct = await product.findById(productid);
+    if (validproduct) {
+      const deleteddata = await product.deleteOne({ _id: productid });
+
+      res.status(200).send({ success: true, msg: "product deleted successfully" });
+
+    }
+    else {
+      res.status(200).send({ success: true, msg: "product id not found" });
+
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+
+  }
+
+}
+
+
+
+
+const deleteproductvarientbyid = async (req, res) => {
+  try {
+    const productvarientid = req.params.productvarientid;
+    const validproductvarient = await productvarient.findById(productvarientid);
+    if (validproductvarient) {
+      const deleteddata = await productvarient.deleteOne({ _id: productvarientid });
+
+      res.status(200).send({ success: true, msg: "productvarient deleted successfully" });
+
+    }
+    else {
+      res.status(200).send({ success: true, msg: "productvarient id not found" });
+
+    }
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+
+  }
+
+}
+
+
 
 module.exports = {
   addproduct,
@@ -293,6 +362,11 @@ module.exports = {
   get_image_by_productvarientid_and_imagename,
 
   getallproduct,
-  getallproductvarient
+  getallproductvarient,
+
+  getproductvarientimagepathbyimagename,
+
+  deleteproductbyid,
+  deleteproductvarientbyid
 
 }
