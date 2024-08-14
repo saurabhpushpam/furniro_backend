@@ -29,7 +29,7 @@ const register_user = async (req, res) => {
 
         const spassword = await securePassword(req.body.password);
         const image = req.file.filename;
-        const imagePath = path.join(__dirname, '..', 'public/userImages', image);
+        // const imagePath = path.join(__dirname, '..', 'public/userImages', image);
 
 
         const users = new user({
@@ -39,7 +39,7 @@ const register_user = async (req, res) => {
             phone: req.body.phone,
             password: spassword,
             // usertype: 'user',
-            profileimage: imagePath
+            profileimage: image
             // profileimage: req.file.filename
 
         });
@@ -213,7 +213,8 @@ const getimage = async (req, res) => {
         const data = await user.findOne({ _id: id });
         if (data) {
             const image = data.profileimage;
-            res.sendFile(image);
+            const imagePath = path.join(__dirname, '..', 'public/userImages', image);
+            res.sendFile(imagePath);
         }
         else {
             res.status(400).send('something went wrong');
