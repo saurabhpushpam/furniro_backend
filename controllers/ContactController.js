@@ -37,7 +37,27 @@ const getcontactdata = async (req, res) => {
   }
 }
 
+
+
+const getallcontactdata = async (req, res) => {
+  try {
+    const getcontact = await contact.find();
+    if (getcontact) {
+      res.status(200).send({ success: true, data: getcontact });
+    }
+    else {
+      res.status(400).send({ success: true, msg: 'something went wrong' });
+    }
+
+  } catch (error) {
+    res.status(400).send({ success: false, msg: error.message });
+
+  }
+
+}
+
 module.exports = {
   addcontact,
-  getcontactdata
+  getcontactdata,
+  getallcontactdata
 }

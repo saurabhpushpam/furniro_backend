@@ -12,4 +12,6 @@ contactRoutes.post('/addcontact', auth, contactcontroller.addcontact);
 
 contactRoutes.get('/getcontactdetail/:contactid', contactcontroller.getcontactdata);
 
+contactRoutes.get('/getallcontact', contactcontroller.getallcontactdata);
+
 module.exports = contactRoutes
